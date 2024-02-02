@@ -11,11 +11,25 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 function UpdateCursor () {
     cursor.top = Math.floor(120 / Ratio) * (cursorPos + 1) - 2
 }
+function _5wire () {
+    redCount = 0
+}
 function startPhase () {
     while (wireCount < 3 || wireCount > 6) {
         wireCount = game.askForNumber("# of wires? (3-6)", 1)
     }
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (wireCount == 3) {
+        _3wire()
+    } else if (wireCount == 4) {
+        _4wire()
+    } else if (wireCount == 5) {
+        _5wire()
+    } else if (wireCount == 6) {
+        _6wire()
+    }
+})
 function InitSerial () {
     SerialNumber = game.askForNumber("Last Digit of Serial Number", 1)
 }
@@ -97,6 +111,25 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite2 = sprites.create(WireSprites[cursorPos], SpriteKind.Wire)
     mySprite2.top = Math.floor(120 / Ratio) * (cursorPos + 1)
 })
+function _4wire () {
+    redCount = 0
+    whiteCount = 0
+    yellowCount = 0
+    for (let value of WireList) {
+        if (value == 0) {
+            redCount += 1
+        }
+    }
+    if (redCount > 1 && SerialNumber % 2 == 1) {
+        if (WireList[3] == 0) {
+            game.splash("cut wire 4")
+        } else if (WireList[2]) {
+            game.splash("cut wire 3")
+        } else {
+            game.splash("cut wire 2")
+        }
+    }
+}
 sprites.onCreated(SpriteKind.Wire, function (sprite) {
     sprite.setFlag(SpriteFlag.Ghost, true)
 })
@@ -105,6 +138,23 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     cursorPos = cursorPos % wireCount
     UpdateCursor()
 })
+function _6wire () {
+    whiteCount = 0
+}
+function _3wire () {
+    redCount = 0
+    blueCount = 0
+    for (let value of WireList) {
+        if (value == 0) {
+        	
+        } else {
+        	
+        }
+    }
+}
+let blueCount = 0
+let yellowCount = 0
+let whiteCount = 0
 let mySprite: Image = null
 let mySprite2: Sprite = null
 let sprite_list: Sprite[] = []
@@ -112,6 +162,7 @@ let WireSprites: Image[] = []
 let colourList: number[] = []
 let WireList: number[] = []
 let SerialNumber = 0
+let redCount = 0
 let Ratio = 0
 let cursor: Sprite = null
 let cursorPos = 0
